@@ -169,18 +169,18 @@ if __name__ == "__main__":
 	)
 	args = parser.parse_args()
 
+	with open('config.json', 'r') as f:
+		config = json.load(f)
+
+	con = connector.connect(
+		user=config['MYSQL_DATABASE_USER'],
+		password=config['MYSQL_DATABASE_PASSWORD'],
+		host=config['MYSQL_DATABASE_HOST'],
+		database=config['MYSQL_DATABASE_DB']
+	)
+	cursor = con.cursor()
+
 	try:
-		with open('config.json', 'r') as f:
-			config = json.load(f)
-
-		con = connector.connect(
-			user=config['MYSQL_DATABASE_USER'],
-			password=config['MYSQL_DATABASE_PASSWORD'],
-			host=config['MYSQL_DATABASE_HOST'],
-			database=config['MYSQL_DATABASE_DB']
-		)
-
-		cursor = con.cursor()
 		if args.clear:
 			clear_database(con, cursor)
 
