@@ -22,7 +22,7 @@
 					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 					<select name="project_id" class="btn btn-sm">
 					{% for p in projects %}
-						<option value="{{ p[0] }}">{{ p[1] }}</option>
+						<option value="{{ p.id }}">{{ p.name }}</option>
 					{% endfor %}
 					</select>
 					<input type="range" min="0" max="10" 
@@ -59,27 +59,29 @@
 		{% endwith %}
 		</div>
 		<div class="row" style="margin-top: 10px;">
-		{% for e in executors_projects_tasks %}
+		{% for e in executors %}
 			<div class="row col-12 border border-primary" style="margin-bottom: 20px; padding: 10px;">
 				<div class="col-2">
-					<p><em>{{ e[1] }}</em></p>
-					<p><em>Нагрузка:</em> <strong>{{ e[2] }}</strong></p>
+					<p><em>{{ e.name }}</em></p>
+					<p><em>Нагрузка:</em> <strong>{{ e.get_total_load() }}</strong></p>
 				</div>
 				<div class="row col-10">
-				{% for p in e[3] %}
+				{% for p in e.projects %}
 					<div class="border border-secondary" 
 						 style="margin: 5px; padding: 3px; background: AliceBlue;">
-						<div class="text-center">{{ p[1] }}</div>
-					{% for t in p[3] %}
+						<div class="text-center">{{ p.name }}</div>
+					{% for t in p.tasks %}
+					{% if t.executor_id == e.id %}
 						<span class="fa-layers fa-fw fa-3x" style="margin: 3px;" 
 							  data-toggle="tooltip" data-html="true"
 							  data-placement="right" 
-							  title="{{ p[1] }} - {{ t[1] }} - {{ t[3] }}">
+							  title="{{ p.name }} - {{ t.name }} - {{ t.story_point }}">
 							<i class="fas fa-clipboard" style="color: Tomato;"></i>
 							<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-8 down-3" style="font-weight:900">
-								{{ t[3] }}
+								{{ t.story_point }}
 							</span>
 						</span>
+					{% endif %}
 					{% endfor %}
 					</div>
 				{% endfor %}
